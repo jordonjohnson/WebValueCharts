@@ -1,8 +1,8 @@
 
 import { Component, OnInit }										    from '@angular/core';
 import * as _                                       from 'lodash';
-import { Observable }                               from 'rxjs/Observable';
-import { Subscriber }                               from 'rxjs/Subscriber';
+import { Observable }                               from 'rxjs';
+import { Subscriber }                               from 'rxjs';
 import '../../utilities/rxjs-operators';
 
 // Import Application Classes:

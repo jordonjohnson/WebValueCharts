@@ -354,7 +354,7 @@ export class HomeComponent implements OnInit {
 		// Define the event handler for when file reading completes:
 		reader.onload = (fileReaderEvent: ProgressEvent) => {
 			if (event.isTrusted) {
-				var xmlString = (<FileReader>fileReaderEvent.target).result;	// Retrieve the file contents string from the file reader.
+				var xmlString = (<FileReader>fileReaderEvent.target).result as string;	// Retrieve the file contents string from the file reader.
 				let valueChart = this.valueChartParser.parseValueChart(xmlString);
 				valueChart.setCreator(this.currentUserService.getUsername());	// Set the current user as the owner.
 				valueChart.setName('');											// Erase the ValueChart's name. The owner must give it a new one.

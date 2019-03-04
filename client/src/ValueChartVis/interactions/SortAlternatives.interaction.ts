@@ -12,9 +12,7 @@ import { Injectable } 												from '@angular/core';
 import * as d3 														from 'd3';
 import * as _ 														from 'lodash';
 
-import { Subject }													from 'rxjs/Subject';
-import { Observable }												from 'rxjs/Observable';
-import { Subscription }												from 'rxjs/Subscription';
+import { Subject, Observable, Subscription, fromEvent, merge }		from 'rxjs';
 import '../../app/utilities/rxjs-operators';
 
 // Import Application Classes
@@ -161,10 +159,10 @@ export class SortAlternativesInteraction {
 		var objectiveText: NodeListOf<Element> = labelRootContainer.querySelectorAll('.' + LabelDefinitions.SUBCONTAINER_TEXT);
 
 		if (!this.clicks) {	
-			var clicksLabels = Observable.fromEvent(objectiveLabels, 'click');
-			var clicksText =  Observable.fromEvent(objectiveText, 'click');
+			var clicksLabels = fromEvent(objectiveLabels, 'click');
+			var clicksText =  fromEvent(objectiveText, 'click');
 		
-			this.clicks = Observable.merge(clicksLabels, clicksText);
+			this.clicks = merge(clicksLabels, clicksText);
 		}
 
 		if (this.onClick != undefined)

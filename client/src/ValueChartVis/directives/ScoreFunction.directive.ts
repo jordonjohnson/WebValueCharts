@@ -11,8 +11,8 @@ import { OnInit, OnDestroy, DoCheck }									from '@angular/core';
 // d3
 import * as d3 															from 'd3';
 import * as _															from 'lodash';
-import { Subject }														from 'rxjs/Subject';
-import { Subscription }													from 'rxjs/Subscription';
+import { Subject, Subscription }										from 'rxjs';
+import { map }															from 'rxjs/operators';
 import '../../app/utilities/rxjs-operators';
 
 // Import Application Classes:
@@ -113,13 +113,15 @@ export class ScoreFunctionDirective implements OnInit, DoCheck {
 		this.scoreFunctionSubject = new Subject();
 		this.interactionSubject = new Subject();
 
-		this.rendererSubscription = this.scoreFunctionSubject.map((sfU: ScoreFunctionUpdate) => { 
+
+		// TODO should I be using flatMap instead of map?
+		this.rendererSubscription = this.scoreFunctionSubject.pipe(map((sfU: ScoreFunctionUpdate) => { 
 			sfU.el = this.scoreFunctionPlotContainer;
 			sfU.objective = this.objective;
 			
 			return sfU;
-		}).map(this.rendererScoreFunctionUtility.produceScoreFunctionData)
-			.map(this.rendererScoreFunctionUtility.produceViewConfig)
+		}), map(this.rendererScoreFunctionUtility.produceScoreFunctionData)
+			, map(this.rendererScoreFunctionUtility.produceViewConfig))
 			.subscribe(this.scoreFunctionRenderer.scoreFunctionChanged);
 
 		this.interactionSubject.subscribe(this.scoreFunctionRenderer.interactionConfigChanged);

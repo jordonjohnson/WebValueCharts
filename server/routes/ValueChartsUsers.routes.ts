@@ -9,8 +9,9 @@
 import * as express 								from 'express';
 import * as path 									from 'path';
 import * as MongoDB 								from 'mongodb';
-import * as Monk 									from 'monk';
 import * as _ 										from 'lodash';
+
+var monk = require('monk');
 
 // Import Application Classes:
 import { HostEventEmitter, hostEventEmitter }		from '../utilities/HostEventEmitters';
@@ -22,7 +23,7 @@ export var valueChartUsersRoutes: express.Router = express.Router();
 
 // Replace the ValueChart's users with the given list of users.
 valueChartUsersRoutes.put('/', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var valueChartCollection: Monk.Collection = (<any> req).db.get('ValueCharts');
+	var valueChartCollection = (<any> req).db.get('ValueCharts');
 	var identifier: string = (<any> req).identifier
 	var username: string = req.params.username;
 
@@ -68,7 +69,7 @@ valueChartUsersRoutes.put('/', function(req: express.Request, res: express.Respo
 
 // Retrieve a specific user from a ValueChart's list of users using their username as the identifier. 
 valueChartUsersRoutes.get('/:username', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var valueChartCollection: Monk.Collection = (<any> req).db.get('ValueCharts');
+	var valueChartCollection = (<any> req).db.get('ValueCharts');
 	var identifier: string = (<any> req).identifier
 	var username: string = req.params.username;
 
@@ -106,7 +107,7 @@ valueChartUsersRoutes.get('/:username', function(req: express.Request, res: expr
 valueChartUsersRoutes.all('*', function(req: express.Request, res: express.Response, next: express.NextFunction) {
 	var identifier: string = (<any> req).identifier
 
-	var statusCollection: Monk.Collection = (<any> req).db.get('ValueChartStatuses');
+	var statusCollection = (<any> req).db.get('ValueChartStatuses');
 	statusCollection.findOne({ chartId: identifier }, (err: Error, doc: ValueChartStatus) => {
 		// If the host connection is active, and user changes are not being accepted.
 		if (doc && doc.lockedByCreator) {
@@ -127,7 +128,7 @@ valueChartUsersRoutes.all('*', function(req: express.Request, res: express.Respo
 
 // Create new ValueChart user by posting to a ValueChart's list of users.
 valueChartUsersRoutes.post('/', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var valueChartCollection: Monk.Collection = (<any> req).db.get('ValueCharts');
+	var valueChartCollection = (<any> req).db.get('ValueCharts');
 	var identifier: string = (<any> req).identifier	// Retrieve the chart Id. Recall that it is attached to the request object the middleware
 												// function in ValueCharts.routes.ts.
 	// Locate the ValueChart to which the user should be added.											
@@ -161,7 +162,7 @@ valueChartUsersRoutes.post('/', function(req: express.Request, res: express.Resp
 
 // Update an existing ValueChart user with a new resource, or create a new user if it does not exist. This action is idempotent as required by REST.
 valueChartUsersRoutes.put('/:username', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var valueChartCollection: Monk.Collection = (<any> req).db.get('ValueCharts');
+	var valueChartCollection = (<any> req).db.get('ValueCharts');
 	var identifier: string = (<any> req).identifier
 	var username: string = req.params.username;
 
@@ -215,7 +216,7 @@ valueChartUsersRoutes.put('/:username', function(req: express.Request, res: expr
 
 // Delete a ValueChart user with the given username. This action is idempotent as required by REST.
 valueChartUsersRoutes.delete('/:username', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var valueChartCollection: Monk.Collection = (<any> req).db.get('ValueCharts');
+	var valueChartCollection = (<any> req).db.get('ValueCharts');
 	var identifier: string = (<any> req).identifier
 	var username: string = req.params.username;
 

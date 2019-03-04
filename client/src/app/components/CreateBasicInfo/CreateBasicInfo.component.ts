@@ -1,7 +1,7 @@
 // Import Angular Classes:
 import { Component, OnInit, OnDestroy }										from '@angular/core';
-import { Observable }     													from 'rxjs/Observable';
-import { Subscriber }     													from 'rxjs/Subscriber';
+import { Observable }     													from 'rxjs';
+import { Subscriber }     													from 'rxjs';
 import * as _																from 'lodash';
 
 import '../../utilities/rxjs-operators';

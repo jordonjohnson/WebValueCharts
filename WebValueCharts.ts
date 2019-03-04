@@ -8,13 +8,14 @@
 // Import Libraries and Middleware:
 import * as express 								from 'express';
 import * as mongo 									from 'mongodb';
-import * as monk									from 'monk';
 import * as path 									from 'path';
 import * as favicon 								from 'serve-favicon';
 import * as logger 									from 'morgan';
 import * as cookieParser 							from 'cookie-parser';
 import * as bodyParser 								from 'body-parser';
 import * as expressSession							from 'express-session';
+
+var monk = require('monk');
 
 //  Import Routers and Route Handlers: 
 import { dbAddress }								from './server/db.address';
@@ -31,7 +32,7 @@ import { passport }									from './server/utilities/auth';
 var webValueCharts: express.Application = express();
 
 // Retrieve the database via the connection url. "development" is the username and "BackEndConstruction" is the password.
-var db: monk.Monk = monk(dbAddress);
+var db = monk(dbAddress);
 
 // Require express websocket (an express implementation of the WebSocket protocol) and call its initialization function.
 // This function attaches the WebScoket methods (ws for example) to the express instance we are using.

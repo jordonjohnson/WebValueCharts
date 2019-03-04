@@ -10,7 +10,7 @@ import { Injectable } 												from '@angular/core';
 
 // Import Libraries:
 import * as d3 														from 'd3';
-import { Subject }													from 'rxjs/Subject';
+import { Subject }													from 'rxjs';
 
 // Import Application Classes:
 import { ChartUndoRedoService }										from '../services';

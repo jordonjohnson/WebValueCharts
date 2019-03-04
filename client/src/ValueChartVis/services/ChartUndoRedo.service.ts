@@ -11,7 +11,7 @@ import { Injectable } 														from '@angular/core';
 // Import Libraries:
 import * as d3 																from 'd3';
 import * as _ 																from 'lodash';
-import { Subject }															from 'rxjs/Subject';
+import { Subject }															from 'rxjs';
 
 // Import Model Classes:
 import { ValueChart }														from '../../model';

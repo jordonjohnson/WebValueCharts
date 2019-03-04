@@ -9,7 +9,8 @@
 import { Injectable }    												from '@angular/core';
 import { CanDeactivate, CanActivate, NavigationStart, NavigationEnd  }	from '@angular/router';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot} 			from '@angular/router';
-import { Observable }    												from 'rxjs/Observable';
+import { Observable, from }    											from 'rxjs';
+import { filter }														from 'rxjs/operators';
 import '../utilities/rxjs-operators';
 
 
@@ -41,13 +42,13 @@ export class CreationGuard implements CanDeactivate<CreateValueChartComponent>, 
 		// Record the navigation source from the NavigationState event.
 		this.router
 		    .events
-		    .filter(e => e instanceof NavigationEnd)
+		    .pipe(filter(e => e instanceof NavigationEnd))
 		    .subscribe((e: NavigationEnd) => this.source = e.url)
 
 		// Record the navigation destination from the NavigationState event.
 		this.router
 		    .events
-		    .filter(e => e instanceof NavigationStart)
+		    .pipe(filter(e => e instanceof NavigationStart))
 		    .subscribe((e: NavigationStart) => this.destination = e.url)
 	}
 
@@ -71,7 +72,7 @@ export class CreationGuard implements CanDeactivate<CreateValueChartComponent>, 
 		//	(2) the destination is the ValueChartViewer;
 		if ( this.destination.indexOf('ValueCharts/') !== -1 // We are going to the ValueChart Viewer
 			|| purpose !== CreatePurpose.NewValueChart) {	// We were not creating a new ValueChart
-			return Observable.from([true]);
+			return from([true]);
 		} else {
 			// Otherwise, open the navigation model and ask the user for instructions.
 			return component.openNavigationModal();

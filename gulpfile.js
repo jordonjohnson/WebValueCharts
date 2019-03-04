@@ -122,22 +122,6 @@ runTests = function(tests) {
 // Start a standalone instance of webdriver.
 gulp.task('webdriver_standalone', webdriver_standalone);
 
-// ====== Testing Tasks ======
-
-// Execute unit tests. Assumes pre-compilation of project source and a running local server.
-gulp.task('unit', ['compile:tests'], unit)
-// Executes end-to-end tests. Assumes pre-compilation of project source and a running local server.
-gulp.task('e2e', ['compile:tests'], e2e)
-// Executes server-side unit tests. Assumes pre-compilation of project source and a running local server.
-gulp.task('server', ['compile:tests'], serverTests)
-// Executes unit tests after compiling tests and source; starts its own local server.
-gulp.task('test:unit', ['compile'], unit);
-// Executes end-to-end tests after compiling tests and source; starts its own local server.
-gulp.task('test:e2e', ['compile'], () => { return runTests(e2e); });
-// Execute server tests after compiling tests and source; starts its own local server.
-gulp.task('test:server', ['compile'], () => { return runTests(serverTests); });
-// Execute all tests after compiling tests and source; starts its own local server.
-gulp.task('test', ['test:unit'], () => { return runTests(() => { return merge([e2e(), serverTests()]); }); });
 
 
 // ====== Compilation Tasks ======
@@ -157,15 +141,37 @@ gulp.task('watch', function() {
     	});
 });
 // Compile the entire project - both source code and tests.
-gulp.task('compile', ['compile:source', 'compile:tests'])
+gulp.task('compile', gulp.series('compile:source', 'compile:tests'))
+
+
+
+// ====== Testing Tasks ======
+
+// Execute unit tests. Assumes pre-compilation of project source and a running local server.
+gulp.task('unit', gulp.series('compile:tests'), unit)
+// Executes end-to-end tests. Assumes pre-compilation of project source and a running local server.
+gulp.task('e2e', gulp.series('compile:tests'), e2e)
+// Executes server-side unit tests. Assumes pre-compilation of project source and a running local server.
+gulp.task('server', gulp.series('compile:tests'), serverTests)
+// Executes unit tests after compiling tests and source; starts its own local server.
+gulp.task('test:unit', gulp.series('compile'), unit);
+// Executes end-to-end tests after compiling tests and source; starts its own local server.
+gulp.task('test:e2e', gulp.series('compile'), () => { return runTests(e2e); });
+// Execute server tests after compiling tests and source; starts its own local server.
+gulp.task('test:server', gulp.series('compile'), () => { return runTests(serverTests); });
+// Execute all tests after compiling tests and source; starts its own local server.
+gulp.task('test', gulp.series('test:unit'), () => { return runTests(() => { return merge([e2e(), serverTests()]); }); });
+
+
+
 
 
 // ====== Local Server Tasks ======
 
 // Start a local server in watch mode after compiling the project source code.
-gulp.task('start', ['watch', 'compile:source'], startServer);
+gulp.task('start', gulp.series('compile:source', 'watch'), startServer);
 // ^^ as above, just with the default 'gulp' command.
-gulp.task('default', ['start']);
+gulp.task('default', gulp.series('start'));
 
 
 

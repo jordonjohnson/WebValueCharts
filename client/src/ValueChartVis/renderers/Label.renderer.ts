@@ -11,7 +11,8 @@ import { Injectable } 												from '@angular/core';
 // Import Libraries:
 import * as d3 														from 'd3';
 import * as _														from 'lodash';
-import { Subject }													from 'rxjs/Subject';
+import { Subject }													from 'rxjs';
+import { map }														from 'rxjs/operators';
 import '../../app/utilities/rxjs-operators';
 
 // Import Application Classes:
@@ -529,13 +530,13 @@ export class LabelRenderer {
 
 		// Create a new Subject that will be used to pass renderer updates to the ScoreFunctionRenderer.
 		var weightsPlotSubject = new Subject();
-		weightsPlotSubject.map((update: any) => { 
+		weightsPlotSubject.pipe(map((update: any) => { 
 			update.el = weightsPlot;
 			update.objective = objective;
 			
 			return update;
-		}).map(this.rendererScoreFunctionUtility.produceWeightDistributionData)
-			.map(this.rendererScoreFunctionUtility.produceViewConfig)
+		}), map(this.rendererScoreFunctionUtility.produceWeightDistributionData)
+			, map(this.rendererScoreFunctionUtility.produceViewConfig))
 			.subscribe(renderer.weightsPlotChanged);
 
 		// Cache the subject associated with the new ScoreFunctionPlot.
@@ -606,19 +607,19 @@ export class LabelRenderer {
 
 		// Create a new Subject that will be used to pass renderer updates to the ScoreFunctionRenderer.
 		var scoreFunctionSubject = new Subject();
-		scoreFunctionSubject.map((sfU: ScoreFunctionUpdate) => { 
+		scoreFunctionSubject.pipe(map((sfU: ScoreFunctionUpdate) => { 
 			sfU.el = scoreFunction;
 			sfU.objective = objective;
 			
 			return sfU;
-		}).map(this.rendererScoreFunctionUtility.produceScoreFunctionData)
-			.map(this.rendererScoreFunctionUtility.produceViewConfig)
+		}), map(this.rendererScoreFunctionUtility.produceScoreFunctionData)
+			, map(this.rendererScoreFunctionUtility.produceViewConfig))
 			.subscribe(renderer.scoreFunctionChanged);
 
 		// Cache the subject associated with the new ScoreFunctionPlot.
 		this.scoreFunctionSubjects[objective.getId() + '-scorefunction'] = scoreFunctionSubject;
 		this.scoreFunctionViewSubject.subscribe(renderer.viewConfigChanged);
-		this.scoreFunctionInteractionSubject.map((interactionConfig: any) => { return { adjustScoreFunctions: (interactionConfig.adjustScoreFunctions && !objective.getDefaultScoreFunction().immutable), expandScoreFunctions: interactionConfig.expandScoreFunctions }; })
+		this.scoreFunctionInteractionSubject.pipe(map((interactionConfig: any) => { return { adjustScoreFunctions: (interactionConfig.adjustScoreFunctions && !objective.getDefaultScoreFunction().immutable), expandScoreFunctions: interactionConfig.expandScoreFunctions }; }))
 				.subscribe(renderer.interactionConfigChanged);
 
 		// Render the Score Function for the first time. This is required to create the SVG elements/structure of the ScoreFunction plot.

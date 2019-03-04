@@ -9,7 +9,8 @@
 import { Injectable }    										from '@angular/core';
 import { CanDeactivate, CanActivate, NavigationStart }			from '@angular/router';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } 	from '@angular/router';
-import { Observable }    										from 'rxjs/Observable';
+import { Observable }    										from 'rxjs';
+import { filter }												from 'rxjs/operators';
 import '../utilities/rxjs-operators';
 
 // Import Libraries:
@@ -52,7 +53,7 @@ export class UserGuard implements CanDeactivate<any> {
 		// Record the navigation destination from the NavigationState event.
 		this.router
 		    .events
-		    .filter(e => e instanceof NavigationStart)
+		    .pipe(filter(e => e instanceof NavigationStart))
 		    .subscribe((e: NavigationStart) => this.destination = e.url)	
 	}
 

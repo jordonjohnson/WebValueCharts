@@ -11,7 +11,7 @@ import { NgZone }													from '@angular/core';
 
 // Import Libraries:
 import * as d3 														from 'd3';
-import { Subject }													from 'rxjs/Subject';
+import { Subject }													from 'rxjs';
 import '../../app/utilities/rxjs-operators';
 
 // Import Application Classes

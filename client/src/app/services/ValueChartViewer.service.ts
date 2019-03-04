@@ -11,7 +11,7 @@ import { Injectable, OnDestroy } 							from '@angular/core';
 
 // Import Libraries:
 import * as _												from 'lodash';
-import { Subscription }										from 'rxjs/Subscription';
+import { Subscription }										from 'rxjs';
 
 // Import Application Classes:
 import { UserNotificationService }							from './UserNotification.service'; 

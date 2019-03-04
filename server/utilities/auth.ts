@@ -9,12 +9,13 @@
 import * as express 								from 'express';
 import * as Passport 								from 'passport';
 import { Strategy }									from 'passport-local';
-import * as monk									from 'monk';
 
 import { dbAddress }								from '../db.address';
 
+var monk = require('monk');
+
 // Load the database.
-var db: monk.Monk = monk(dbAddress);
+var db = monk(dbAddress);
 
 var localRegistration = (username: string, password: string, req: express.Request) => {
 

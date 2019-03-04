@@ -10,8 +10,7 @@ import { Injectable } 															from '@angular/core';
 
 // Import Libraries:
 import * as d3 																	from 'd3';
-import { Observable }															from 'rxjs/Observable';
-import { Subscription }				 											from 'rxjs/Subscription';
+import { Observable, Subscription, fromEvent }									from 'rxjs';
 import '../../app/utilities/rxjs-operators';
 
 // Import Application Classes:
@@ -60,7 +59,7 @@ export class SetObjectiveColorsInteraction {
 	public toggleSettingObjectiveColors(setObjectiveColors: boolean, rootContainer: Element): void {
 		// Initialize the observable that is used to detect clicks and notifies handlers.
 		let primitiveObjectiveLabels = rootContainer.querySelectorAll('.' + LabelDefinitions.PRIMITIVE_OBJECTIVE_LABEL);
-		this.clicks = Observable.fromEvent(primitiveObjectiveLabels, 'click');
+		this.clicks = fromEvent(primitiveObjectiveLabels, 'click');
 
 		if (this.onClick != undefined)
 			this.onClick.unsubscribe();

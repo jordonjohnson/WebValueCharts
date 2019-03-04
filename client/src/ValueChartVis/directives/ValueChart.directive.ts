@@ -13,8 +13,8 @@ import { EventEmitter }																			from '@angular/core';
 
 // Import Libraries:
 import * as d3 																					from 'd3';
-import { Subscription } 																		from 'rxjs/Subscription';
-import { Subject }																				from 'rxjs/Subject';
+import { Subscription, Subject } 																from 'rxjs';
+import { map }																					from 'rxjs/operators';
 import '../../app/utilities/rxjs-operators';
 
 // Import Application Classes:
@@ -239,7 +239,7 @@ export class ValueChartDirective implements OnInit, DoCheck {
 		var rendererUpdates = new Subject();
 
 		// Attach the base information to RendererUpdates using a map. Note that maps are called every time a new RendererUpdate message is sent.
-		this.valueChartSubject.map((u: RendererUpdate) => {
+		this.valueChartSubject.pipe(map((u: RendererUpdate) => {
 			 u.el = this.el;
 			 u.height = this.defaultChartComponentHeight;
 			 u.width = this.defaultChartComponentWidth;
@@ -248,27 +248,27 @@ export class ValueChartDirective implements OnInit, DoCheck {
 			 u.renderRequired = this.renderRequired;
 			 u.reducedInformation = this.reducedInformation;
 			 return u;
-		}).map(this.rendererDataUtility.produceMaximumWeightMap)	// Attach the maximumWeightMap to the RendererUpdate using a map.
-			.map(this.rendererDataUtility.produceRowData)			// Attach the rowData to the RendererUpdate using a map.
-			.map(this.rendererDataUtility.produceLabelData)			// Attach the lableData to the RendererUpdate using a map.
+		}), map(this.rendererDataUtility.produceMaximumWeightMap)	// Attach the maximumWeightMap to the RendererUpdate using a map.
+			, map(this.rendererDataUtility.produceRowData)			// Attach the rowData to the RendererUpdate using a map.
+			, map(this.rendererDataUtility.produceLabelData))			// Attach the labelData to the RendererUpdate using a map.
 			.subscribe(rendererUpdates);							// Subscribe the rendererUpdates subject to the valueChartSubject
 																	// so that the above map functions are called ONLY once per message.
 																	// This is the single-casting mentioned above.
 
 		// Attach the SummaryChart configuration to the RendererUpdate messages using a map and then subscript the SummaryChartRenderer to the messages.
-		rendererUpdates
-			.map(this.rendererConfigUtility.produceSummaryChartConfig)
-			.map(this.rendererConfigUtility.produceRendererConfig)
+		rendererUpdates.pipe(
+			map(this.rendererConfigUtility.produceSummaryChartConfig)
+			, map(this.rendererConfigUtility.produceRendererConfig))
 			.subscribe(this.summaryChartRenderer.valueChartChanged);
 		// Attach the ObjectiveChart configuration to the RendererUpdate messages using a map and then subscript the ObjectiveChartRenderer to the messages.
-		rendererUpdates
-			.map(this.rendererConfigUtility.produceObjectiveChartConfig)
-			.map(this.rendererConfigUtility.produceRendererConfig)
+		rendererUpdates.pipe(
+			map(this.rendererConfigUtility.produceObjectiveChartConfig)
+			, map(this.rendererConfigUtility.produceRendererConfig))
 			.subscribe(this.objectiveChartRenderer.valueChartChanged);
 		// Attach the Label configuration to the RendererUpdate messages using a map and then subscript the LabelRenderer to the messages.
-		rendererUpdates
-			.map(this.rendererConfigUtility.produceLabelConfig)
-			.map(this.rendererConfigUtility.produceRendererConfig)
+		rendererUpdates.pipe(
+			map(this.rendererConfigUtility.produceLabelConfig)
+			, map(this.rendererConfigUtility.produceRendererConfig))
 			.subscribe(this.labelRenderer.valueChartChanged);
 
 		// Subscribe the renderers to the interactionConfig and viewConfig subjects.

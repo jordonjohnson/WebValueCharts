@@ -16,7 +16,7 @@ import { expect }										from 'chai';
 // Import Libraries:
 import  * as d3											from 'd3';
 import * as _											from 'lodash';
-import { Subject }										from 'rxjs/Subject';
+import { Subject }										from 'rxjs';
 
 // Import Test Utilities 
 import { HotelChartData }								from '../../../../testData/HotelChartData';

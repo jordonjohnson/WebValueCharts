@@ -9,9 +9,7 @@ import { Injectable } 												from '@angular/core';
 
 // Import Libraries:
 import * as _														from 'lodash';
-import { Observable }												from 'rxjs/Observable';
-import { Subscription } 											from 'rxjs/Subscription';
-import { Subject }													from 'rxjs/Subject';
+import { Observable, Subscription, Subject }						from 'rxjs';
 import '../utilities/rxjs-operators';
 
 // Import Application Classes:

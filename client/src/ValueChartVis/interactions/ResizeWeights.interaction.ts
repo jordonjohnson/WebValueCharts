@@ -11,9 +11,8 @@ import { Injectable } 												from '@angular/core';
 // Import Libraries:
 import * as d3 														from 'd3';
 import * as _														from 'lodash';
-import { Subject }													from 'rxjs/Subject';
-import { Observable }												from 'rxjs/Observable';
-import { Subscription } 											from 'rxjs/Subscription';
+import { Subject, Observable, Subscription, fromEvent }				from 'rxjs';
+import { map }														from 'rxjs/operators';
 import '../../app/utilities/rxjs-operators';
 
 // Import Application Classes
@@ -93,14 +92,14 @@ export class ResizeWeightsInteraction {
 	public togglePump(pumpType: PumpType, primitiveObjectiveLabels: NodeListOf<Element>, rendererUpdate: RendererUpdate): void {
 		this.lastRendererUpdate = rendererUpdate;
 		// Initialize the observable that is used to detect clicks and notifies handlers.
-		this.clicks = Observable.fromEvent(primitiveObjectiveLabels, 'click');
+		this.clicks = fromEvent(primitiveObjectiveLabels, 'click');
 
 		if (this.onClick != undefined)
 			this.onClick.unsubscribe();
 
 		if (pumpType !== PumpType.None) {
 			this.onClick = this.clicks
-				.map((eventObject: Event) => { (<any> eventObject).pumpType = pumpType; return eventObject; })		// Attach the pumpType to the event.
+				.pipe(map((eventObject: Event) => { (<any> eventObject).pumpType = pumpType; return eventObject; }))		// Attach the pumpType to the event.
 				.subscribe(this.onPump);
 		}
 	}

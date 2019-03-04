@@ -9,10 +9,11 @@
 import { Injectable } 												from '@angular/core';
 import { Http, Response } 											from '@angular/http';
 import { Headers, RequestOptions } 									from '@angular/http';
-import { Observable }     											from 'rxjs/Observable';
+import { Observable, of }     										from 'rxjs';
+import { map, catchError }											from 'rxjs/operators';
 import '../utilities/rxjs-operators';
 
-// IMport Application Classes: 
+// Import Application Classes: 
 import { JsonValueChartParser }										from '../utilities';
 
 // Import Model Classes:
@@ -80,8 +81,8 @@ export class ValueChartHttp {
 		let options = new RequestOptions({ headers: headers });
 
 		return this.http.post(this.valueChartsUrl, body, options)
-			.map(this.extractValueChartData)
-			.catch(this.handleError);
+			.pipe(map(this.extractValueChartData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -100,8 +101,8 @@ export class ValueChartHttp {
 		let options = new RequestOptions({ headers: headers });
 
 		return this.http.put(this.valueChartsUrl + valueChart._id, body, options)
-			.map(((this.extractValueChartData)))
-			.catch(this.handleError);
+			.pipe(map(this.extractValueChartData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -112,10 +113,10 @@ export class ValueChartHttp {
 	*/
 	isNameAvailable(fname: string): Observable<boolean> {
 		return this.http.get(this.valueChartsUrl + fname + '/id')
-			.map((body) => { return !body } )
-			.catch((error: any, caught: Observable<any>): Observable<boolean> => {
-				return Observable.of(true);
-			});
+			.pipe(map((body) => { return !body } ),
+			 catchError((error: any, caught: Observable<any>): Observable<boolean> => {
+				return of(true);
+			}));
 	}		
 
 	/*
@@ -127,8 +128,8 @@ export class ValueChartHttp {
 	*/
 	getValueChart(chartId: string, password: string): Observable<ValueChart> {
 		return this.http.get(this.valueChartsUrl + chartId + '?password=' + password)
-			.map(this.extractValueChartData)
-			.catch(this.handleError);
+			.pipe(map(this.extractValueChartData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -140,8 +141,8 @@ export class ValueChartHttp {
 	*/
 	getValueChartByName(fname: string, password: string): Observable<ValueChart> {
 		return this.http.get(this.valueChartsUrl + fname + '?password=' + password)
-			.map(this.extractValueChartData)
-			.catch(this.handleError);
+			.pipe(map(this.extractValueChartData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -151,8 +152,8 @@ export class ValueChartHttp {
 	*/
 	deleteValueChart(chartId: string): Observable<any> {
 		return this.http.delete(this.valueChartsUrl + chartId)
-			.map(this.extractBody)
-			.catch(this.handleError);
+			.pipe(map(this.extractBody),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -164,8 +165,8 @@ export class ValueChartHttp {
 	*/
 	getValueChartStructure(fname: string, password: string): Observable<ValueChart> {
 		return this.http.get(this.valueChartsUrl + fname + '/structure?password=' + password)
-			.map(this.extractValueChartData)
-			.catch(this.handleError);
+			.pipe(map(this.extractValueChartData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -180,8 +181,8 @@ export class ValueChartHttp {
 		let options = new RequestOptions({ headers: headers });
 
 		return this.http.put(this.valueChartsUrl + valueChart.getFName() + '/structure', body, options)
-			.map(this.extractValueChartData)
-			.catch(this.handleError);
+			.pipe(map(this.extractValueChartData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -201,8 +202,8 @@ export class ValueChartHttp {
 
 
 		return this.http.put(this.valueChartsUrl + status.chartId + '/status', body, options)
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -212,8 +213,8 @@ export class ValueChartHttp {
 	*/
 	getValueChartStatus(chartId: string): Observable<ValueChartStatus> {
 		return this.http.get(this.valueChartsUrl + chartId + '/status')
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -223,8 +224,8 @@ export class ValueChartHttp {
 	*/
 	deleteValueChartStatus(chartId: string): Observable<any> {
 		return this.http.delete(this.valueChartsUrl + chartId + '/status')
-			.map(this.extractBody)
-			.catch(this.handleError);
+			.pipe(map(this.extractBody),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -239,8 +240,8 @@ export class ValueChartHttp {
 		let options = new RequestOptions({ headers: headers });
 
 		return this.http.put(this.valueChartsUrl + chartId + '/users', body, options)
-			.map(((this.extractUsersData)))
-			.catch(this.handleError);
+			.pipe(map(this.extractUsersData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -256,8 +257,8 @@ export class ValueChartHttp {
 		let options = new RequestOptions({ headers: headers });
 
 		return this.http.put(this.valueChartsUrl + chartId + '/users/' + user.getUsername(), body, options)
-			.map(this.extractUserData)
-			.catch(this.handleError);
+			.pipe(map(this.extractUserData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -268,8 +269,8 @@ export class ValueChartHttp {
 	*/
 	deleteUser(chartId: string, username: string): Observable<User> {
 		return this.http.delete(this.valueChartsUrl + chartId + '/users/' + username)
-			.map(this.extractBody)
-			.catch(this.handleError);
+			.pipe(map(this.extractBody),
+			 catchError(this.handleError));
 	}
 
 	// Helper Functions: 

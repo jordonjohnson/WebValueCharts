@@ -1,7 +1,6 @@
 // Import Angular Classes:
 import { Component, OnInit }											from '@angular/core';
-import { Observable }     												from 'rxjs/Observable';
-import { Subscriber }     												from 'rxjs/Subscriber';
+import { Observable, Subscriber }     									from 'rxjs';
 import '../../utilities/rxjs-operators';
 
 // Import Application Classes:

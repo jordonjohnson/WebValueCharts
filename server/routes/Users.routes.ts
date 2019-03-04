@@ -9,8 +9,9 @@
 import * as express 						from 'express';
 import * as path 							from 'path';
 import * as MongoDB 						from 'mongodb';
-import * as Monk 							from 'monk';
 import * as passport 						from 'passport';
+
+var monk = require('monk');
 
 export var usersRoutes: express.Router = express.Router();
 
@@ -65,7 +66,7 @@ usersRoutes.get('/logout', function(req: express.Request, res: express.Response)
 
 // Get an existing user.
 usersRoutes.get('/:user', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var usersCollection: Monk.Collection = (<any> req).db.get('Users');
+	var usersCollection = (<any> req).db.get('Users');
 	var username = req.params.user;
 
 	// Return 401: Unauthorized if the user isn't logged in, or the username of the logged in user does not match the username in request.
@@ -89,7 +90,7 @@ usersRoutes.get('/:user', function(req: express.Request, res: express.Response, 
 
 // Update an existing user, or create one if it does not exist.
 usersRoutes.put('/:user', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var usersCollection: Monk.Collection = (<any> req).db.get('Users');
+	var usersCollection = (<any> req).db.get('Users');
 	var username = req.params.user;
 	
 	// Return 401: Unauthorized if the user isn't logged in, or the username of the logged in user does not match the username in request.
@@ -115,7 +116,7 @@ usersRoutes.put('/:user', function(req: express.Request, res: express.Response, 
 
 // Delete an existing user. 
 usersRoutes.delete('/:user', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var usersCollection: Monk.Collection = (<any> req).db.get('Users');
+	var usersCollection = (<any> req).db.get('Users');
 	var username = req.params.user;
 
 	usersCollection.remove({ username: username }, function(err: Error, doc: any) {
@@ -131,8 +132,8 @@ usersRoutes.delete('/:user', function(req: express.Request, res: express.Respons
 // Get summaries of all ValueCharts the user created. These are just summaries, rather than full ValueCharts.
 // This endpoint will return summaries of all ValueCharts whose creator field equals the user parameter in the route.
 usersRoutes.get('/:user/OwnedValueCharts', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var valueChartCollection: Monk.Collection = (<any> req).db.get('ValueCharts');
-	var statusCollection: Monk.Collection = (<any> req).db.get('ValueChartStatuses');
+	var valueChartCollection = (<any> req).db.get('ValueCharts');
+	var statusCollection = (<any> req).db.get('ValueChartStatuses');
 
 	var username = req.params.user;	
 
@@ -180,8 +181,8 @@ usersRoutes.get('/:user/OwnedValueCharts', function(req: express.Request, res: e
 // Get summaries of all ValueCharts the user is a member of. These are just summaries, rather than full ValueCharts.
 // This endpoint will return summaries of all ValueCharts whose members contain the user parameter in the route.
 usersRoutes.get('/:user/JoinedValueCharts', function(req: express.Request, res: express.Response, next: express.NextFunction) {
-	var valueChartCollection: Monk.Collection = (<any> req).db.get('ValueCharts');
-	var statusCollection: Monk.Collection = (<any> req).db.get('ValueChartStatuses');
+	var valueChartCollection = (<any> req).db.get('ValueCharts');
+	var statusCollection = (<any> req).db.get('ValueChartStatuses');
 
 	var username = req.params.user;	
 

@@ -10,7 +10,8 @@ import '../utilities/rxjs-operators';
 import { Injectable } 												from '@angular/core';
 import { Http, Response } 											from '@angular/http';
 import { Headers, RequestOptions } 									from '@angular/http';
-import { Observable }     											from 'rxjs/Observable';
+import { Observable }     											from 'rxjs';
+import { map, catchError }											from 'rxjs/operators';
 
 /*
 	This class contains methods used to manage application-level users on the server. This class is NOT for users within a ValueChart. 
@@ -59,8 +60,8 @@ export class UserHttp {
 		let options = new RequestOptions({ headers: headers });
 
 		return this.http.post(this.usersUrl, body, options)
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -71,8 +72,8 @@ export class UserHttp {
 	*/
 	getCurrentUser(): Observable<any> {
 		return this.http.get(this.usersUrl + 'currentUser')
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -83,8 +84,8 @@ export class UserHttp {
 	*/
 	getUser(username: string): Observable<any> {
 		return this.http.get(this.usersUrl + username)
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -101,8 +102,8 @@ export class UserHttp {
 		let options = new RequestOptions({ headers: headers });
 
 		return this.http.put(this.usersUrl + username, body, options)
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -119,8 +120,8 @@ export class UserHttp {
 		let options = new RequestOptions({ headers: headers });
 
 		return this.http.post(this.usersUrl + 'login', body, options)
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -131,8 +132,8 @@ export class UserHttp {
 	*/
 	logout(): Observable<any> {
 		return this.http.get(this.usersUrl + 'logout')
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	/*
@@ -143,8 +144,8 @@ export class UserHttp {
 	*/
 	getOwnedValueCharts(username: string): Observable<any[]> {
 		return this.http.get(this.usersUrl + username + '/OwnedValueCharts')
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 		/*
@@ -155,8 +156,8 @@ export class UserHttp {
 	*/
 	getJoinedValueCharts(username: string): Observable<any[]> {
 		return this.http.get(this.usersUrl + username + '/JoinedValueCharts')
-			.map(this.extractData)
-			.catch(this.handleError);
+			.pipe(map(this.extractData),
+			 catchError(this.handleError));
 	}
 
 	// This method extracts the data from the response object and returns it as an observable.l

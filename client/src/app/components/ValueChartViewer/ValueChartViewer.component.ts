@@ -13,8 +13,7 @@ import { Router, ActivatedRoute }												from '@angular/router';
 // Import Libraries:
 import * as d3 																	from 'd3';
 import * as _																	from 'lodash';
-import { Subscription }															from 'rxjs/Subscription';
-import { Observable }															from 'rxjs/Observable';
+import { Subscription, Observable, zip }										from 'rxjs';
 import '../../utilities/rxjs-operators';
 
 // Import Application Classes:
@@ -131,7 +130,7 @@ export class ValueChartViewerComponent implements OnInit {
 	*/
 	ngOnInit() {
 
-		this.routeSubscription = Observable.zip(
+		this.routeSubscription = zip(
 			this.route.params, 
 			this.route.queryParams, 
 			(params, queryParams) => ({ params: params, queryParams: queryParams }))
@@ -172,9 +171,7 @@ export class ValueChartViewerComponent implements OnInit {
 
 		// Initialize automatic resizing of the ValueChart when the window is resized.
 		this.resizeValueChart();
-		$(window).resize((eventObjective: Event) => {
-			this.resizeValueChart();
-		});
+		$(window).resize(this.resizeValueChart);
 	}
 
 

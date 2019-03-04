@@ -8,8 +8,8 @@
 import { Injectable } 															from '@angular/core';
 
 // d3
-import { Subject }																from 'rxjs/Subject';
-import { Observable }															from 'rxjs/Observable';
+import { Subject, Observable, merge }											from 'rxjs';
+import { scan }																	from 'rxjs/operators';
 import '../../app/utilities/rxjs-operators';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class RenderEventsService {
 		this.objectiveChartDispatcher = new Subject();
 		this.labelsDispatcher = new Subject();
 
-		this.rendersCompleted = Observable.merge(this.summaryChartDispatcher, this.objectiveChartDispatcher, this.labelsDispatcher)
-			.scan((acc, one) => acc + one, 0);
+		this.rendersCompleted = merge(this.summaryChartDispatcher, this.objectiveChartDispatcher, this.labelsDispatcher)
+			.pipe(scan((acc, one) => acc + one, 0));
 	}
 }
